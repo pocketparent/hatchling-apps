@@ -45,7 +45,7 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   // State
   const [user, setUser] = useState<User | null>(null);
-  const [children, setChildren] = useState<Child[]>([]);
+  const [childrenList, setChildrenList] = useState<Child[]>([]);
   const [currentChild, setCurrentChild] = useState<Child | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   
@@ -99,20 +99,20 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   useEffect(() => {
     const saveUserData = async () => {
       if (user) await storageClient.setItem('user', user);
-      if (children.length > 0) await storageClient.setItem('children', children);
+      if (childrenList.length > 0) await storageClient.setItem('children', childrenList);
       if (currentChild) await storageClient.setItem('currentChild', currentChild);
     };
     
     saveUserData();
-  }, [user, children, currentChild]);
+  }, [user, childrenList, currentChild]);
   
   return (
     <AppContext.Provider
       value={{
         user,
         setUser,
-        children,
-        setChildren,
+        children: childrenList,  // Map the renamed variable to the original context property
+        setChildren: setChildrenList,  // Map the renamed setter to the original context property
         currentChild,
         setCurrentChild,
         isLoading,
